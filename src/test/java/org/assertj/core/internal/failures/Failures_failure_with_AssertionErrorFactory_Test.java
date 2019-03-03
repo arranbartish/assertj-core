@@ -12,10 +12,12 @@
  */
 package org.assertj.core.internal.failures;
 
+import static org.apache.commons.lang3.ClassUtils.getShortClassName;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.assertj.core.api.AssertionInfo;
 import org.assertj.core.api.WritableAssertionInfo;
 import org.assertj.core.description.Description;
@@ -23,6 +25,7 @@ import org.assertj.core.error.AssertionErrorFactory;
 import org.assertj.core.internal.Failures;
 import org.assertj.core.internal.TestDescription;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -66,6 +69,16 @@ public class Failures_failure_with_AssertionErrorFactory_Test {
 
     MyOwnAssertionError(String message) {
       super(message);
+    }
+  }
+
+  @Nested
+  class ClassMetadata {
+
+    @Test
+    void should_describe_AssertionErrorFactory_as_depricated() {
+      Deprecated annotation = AssertionErrorFactory.class.getAnnotation(Deprecated.class);
+      assertThat(annotation).describedAs("%s is Deprecated and should be annotated as such, but isn't", getShortClassName(AssertionErrorFactory.class)).isNotNull();
     }
   }
 }
